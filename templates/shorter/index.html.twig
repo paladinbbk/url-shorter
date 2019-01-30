@@ -1,10 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<form method="post">
-    <input name="link" type="text" required>
-    <button>make</button>
-</form>
+
+    {{ form_start(form, {'attr': {'method': 'post'}}) }}
+    {{ form_end(form) }}
+
+{#<form method="post">#}
+    {#<input name="link" type="text" required>#}
+    {#<button>make</button>#}
+{#</form>#}
 <br/>
     {% if shortUrl %}
         {{ shortUrl }}

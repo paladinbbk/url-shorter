@@ -37,4 +37,9 @@ class Url
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return 'DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD';
+    }
 }

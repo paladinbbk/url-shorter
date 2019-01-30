@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Url;
+use App\Form\UrlType;
 use App\Repository\UrlRepository;
 use App\Service\UrlShorter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,28 +19,32 @@ class ShorterController extends Controller
      */
     public function index(Request $request, EntityManagerInterface $entityManager)
     {
-        $shortLink = null;
+        $shortUrl = null;
 
-        if ($request->isMethod('post')) {
-            $url = new Url();
-            $url->setLink($request->get('link'));
+        $url = new Url();
+
+        $form = $this->createForm(UrlType::class, $url);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($url);
             $entityManager->flush();
             $shorter = $this->get(UrlShorter::class);
-            $shortUrl = $this->generateUrl('short_link', ['shortLink' => $shorter->encode($url->getId())], UrlGeneratorInterface::ABSOLUTE_URL);
+            $shortUrl = $this->generateUrl('short_link', ['shortUrl' => $shorter->encode($url->getId())], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
-        return $this->render('shorter/index.html.twig', compact('shortUrl'));
+        return $this->render('shorter/index.html.twig', ['form' => $form->createView(), 'shortUrl' => $shortUrl]);
     }
 
     /**
-     * @Route("/{shortLink}", name="short_link")
+     * @Route("/{shortUrl}", name="short_link")
      */
-    public function shortLink($shortLink, UrlRepository $urlRepository)
+    public function shortLink($shortUrl, UrlRepository $urlRepository)
     {
         $shorter = $this->get(UrlShorter::class);
 
-        $url = $urlRepository->find($shorter->decode($shortLink));
+        $url = $urlRepository->find($shorter->decode($shortUrl));
 
         if (!$url) {
             throw $this->createNotFoundException();
