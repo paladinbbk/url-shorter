@@ -2,36 +2,55 @@
 
 namespace App\Service;
 
-
+/**
+ * Class UrlShorter
+ * @package App\Service
+ */
 class UrlShorter
 {
     const CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public function encode($n)
+    /**
+     * Method for generate short url
+     *
+     * @param int $urlId
+     * @return string
+     */
+    public function encode(int $urlId): string
     {
         $base = strlen(self::CHARS);
         $converted = '';
 
-        while ($n > 0) {
-            $converted = substr(self::CHARS, bcmod($n,$base), 1) . $converted;
-            $n = $this->bcFloor(bcdiv($n, $base));
+        while ($urlId > 0) {
+            $converted = substr(self::CHARS, bcmod($urlId, $base), 1) . $converted;
+            $urlId = $this->bcFloor(bcdiv($urlId, $base));
         }
 
-        return $converted ;
+        return $converted;
     }
 
-    public function decode($code)
+    /**
+     * Method for decoding short url to url id
+     *
+     * @param $code
+     * @return int
+     */
+    public function decode(string $code): int
     {
         $base = strlen(self::CHARS);
         $c = '0';
         for ($i = strlen($code); $i; $i--) {
-            $c = \bcadd($c,\bcmul(strpos(self::CHARS, substr($code, (-1 * ( $i - strlen($code) )),1))
-                ,\bcpow($base,$i-1)));
+            $c = \bcadd($c, \bcmul(strpos(self::CHARS, substr($code, (-1 * ($i - strlen($code))), 1))
+                , \bcpow($base, $i - 1)));
         }
 
         return \bcmul($c, 1, 0);
     }
 
+    /**
+     * @param $x
+     * @return string
+     */
     private function bcFloor($x)
     {
         return \bcmul($x, '1', 0);

@@ -3,9 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UrlRepository")
+ * @ORM\Entity()
  */
 class Url
 {
@@ -17,20 +18,31 @@ class Url
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=1020)
+     * @Assert\NotNull
+     * @ORM\Column(type="string", length=1020, nullable=false)
      */
     private $link;
 
+    /**
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getLink(): ?string
     {
         return $this->link;
     }
 
+    /**
+     * @param string $link
+     * @return Url
+     */
     public function setLink(string $link): self
     {
         $this->link = $link;
@@ -38,8 +50,11 @@ class Url
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
-        return 'DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD';
+        return 'Url';
     }
 }
