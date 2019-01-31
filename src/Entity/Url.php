@@ -19,6 +19,7 @@ class Url
 
     /**
      * @Assert\NotNull
+     * @Assert\Length(max=1020)
      * @ORM\Column(type="string", length=1020, nullable=false)
      */
     private $link;
