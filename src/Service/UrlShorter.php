@@ -44,7 +44,7 @@ class UrlShorter
                 , \bcpow($base, $i - 1)));
         }
 
-        return \bcmul($c, 1, 0);
+        return $this->bcFloor($c);
     }
 
     /**
